@@ -40,10 +40,7 @@ const createUserService = async ({
 
   await userRepository.save(newUser);
 
-  const noPwdUser: IUser = newUser;
-  delete noPwdUser.password;
-
-  return noPwdUser;
+  return newUser;
 };
 
 export default createUserService;
