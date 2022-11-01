@@ -6,7 +6,7 @@
   "author": "MatheusMendesSB <matheusmendessb@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node-dev src/app.ts",
+    "dev": "ts-node-dev src/server.ts",
     "typeorm": "typeorm-ts-node-commonjs"
   },
   "devDependencies": {
@@ -16,6 +16,8 @@
     "typescript": "^4.8.4"
   },
   "dependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "bcryptjs": "^2.4.3",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "express-async-errors": "^3.1.1",
