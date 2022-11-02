@@ -13,6 +13,7 @@ export interface IUser {
   stack: string;
   password?: string | undefined;
   isAdm: boolean;
+  isActive: boolean;
   score: number;
 }
 
