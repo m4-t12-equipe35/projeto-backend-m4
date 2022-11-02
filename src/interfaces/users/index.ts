@@ -4,7 +4,6 @@ export interface IUserRequest {
   stack: string;
   password: string;
   isAdm: boolean;
-  isActive: boolean;
 }
 
 export interface IUser {

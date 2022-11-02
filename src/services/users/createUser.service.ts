@@ -13,7 +13,6 @@ const createUserService = async ({
   stack,
   password,
   isAdm,
-  isActive,
 }: IUserRequest): Promise<IUser> => {
   const userRepository = AppDataSource.getRepository(User);
 
@@ -30,6 +29,8 @@ const createUserService = async ({
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
+
+  const isActive = true; // Por padrão, o usuário é criado com isActive === true.
 
   const newUser = userRepository.create({
     name,
