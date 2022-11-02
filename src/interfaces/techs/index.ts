@@ -3,8 +3,6 @@ export interface ITechsRequest {
   stack: string;
 }
 
-export interface ITechs {
+export interface ITechs extends ITechsRequest {
   id: string;
-  name: string;
-  stack: string;
 }
