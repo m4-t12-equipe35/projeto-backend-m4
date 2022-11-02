@@ -15,3 +15,15 @@ export interface IUser {
   isAdm: boolean;
   score: number;
 }
+
+export interface IUserLogin {
+  email: string;
+  password: string;
+}
+
+export interface IUserUpdate {
+  name?: string;
+  email?: string;
+  stack?: string;
+  password?: string;
+}
