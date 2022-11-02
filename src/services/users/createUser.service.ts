@@ -13,6 +13,7 @@ const createUserService = async ({
   stack,
   password,
   isAdm,
+  isActive,
 }: IUserRequest): Promise<IUser> => {
   const userRepository = AppDataSource.getRepository(User);
 
@@ -36,6 +37,7 @@ const createUserService = async ({
     stack,
     password: hashedPassword,
     isAdm,
+    isActive,
   });
 
   await userRepository.save(newUser);
