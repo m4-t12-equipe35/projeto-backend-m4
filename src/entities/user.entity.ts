@@ -22,6 +22,9 @@ export class User {
   @Column()
   isAdm: boolean;
 
+  @Column()
+  isActive: boolean;
+
   @Column("integer", { default: 0 })
   score: number;
 }
