@@ -23,7 +23,7 @@ const ensureAuthTokenMiddleware = async (
     }
 
     req.user = {
-      id: decoded.id,
+      id: decoded.sub,
       isAdm: decoded.isAdm,
     };
 

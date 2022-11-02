@@ -8,18 +8,34 @@ import deleteUserController from "../controllers/users/deleteUser.controller";
 
 import ensureAuthTokenMiddleware from "../middlewares/ensureAuthToken.middleware";
 import ensureIsAdmMiddleware from "../middlewares/ensureIsAdm.middleware";
+import ensureUserMiddleware from "../middlewares/ensureUser.middleware";
 
 const usersRoutes = Router();
 
 usersRoutes.post("", createUserController);
 usersRoutes.get(
   "",
-  listUsersController,
   ensureAuthTokenMiddleware,
-  ensureIsAdmMiddleware
+  ensureIsAdmMiddleware,
+  listUsersController
 );
-usersRoutes.get("/:id", retrieveUserController);
-usersRoutes.patch("/:id", updateUserController);
-usersRoutes.delete("/:id", deleteUserController);
+usersRoutes.get(
+  "/:id",
+  ensureAuthTokenMiddleware,
+  ensureIsAdmMiddleware,
+  retrieveUserController
+);
+usersRoutes.patch(
+  "/:id",
+  ensureAuthTokenMiddleware,
+  ensureUserMiddleware,
+  updateUserController
+);
+usersRoutes.delete(
+  "/:id",
+  ensureAuthTokenMiddleware,
+  ensureIsAdmMiddleware,
+  deleteUserController
+);
 
 export default usersRoutes;
