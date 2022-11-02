@@ -30,12 +30,15 @@ const createUserService = async ({
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
+  const isActive = true; // Por padrão, o usuário é criado com isActive === true.
+
   const newUser = userRepository.create({
     name,
     email,
     stack,
     password: hashedPassword,
     isAdm,
+    isActive,
   });
 
   await userRepository.save(newUser);
