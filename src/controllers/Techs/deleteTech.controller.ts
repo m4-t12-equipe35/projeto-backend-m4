@@ -1,14 +1,16 @@
-import { Request, Response, NextFunction} from 'express'
-import deleteUserService from '../../services/tech/deteleTech.service' 
+import { Request, Response, NextFunction } from "express";
+import deleteUserService from "../../services/techs/deteleTech.service";
 
-const deleteUserController = async (req: Request, res: Response, next: NextFunction) => {
+const deleteUserController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const techId = req.params.id;
 
-        const techId = req.params.id
+  const tech = await deleteUserService(techId);
 
-        const tech =  await deleteUserService(techId)
-    
-        return res.status(204).json({message: "User deleted with sucess!"})
-   
-}
+  return res.status(204).json({ message: "User deleted with sucess!" });
+};
 
-export default deleteUserController
+export default deleteUserController;

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import createTechService from "../../services/tech/createTech.service";
+import createTechService from "../../services/techs/createTech.service";
 
 const createTechController = async (req: Request, res: Response) => {
   const { name, stack } = req.body;
@@ -8,7 +8,7 @@ const createTechController = async (req: Request, res: Response) => {
   const tech = await createTechService({
     name,
     stack,
-   });
+  });
 
   return res.status(201).json(tech);
 };
