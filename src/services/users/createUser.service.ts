@@ -25,7 +25,7 @@ const createUserService = async ({
   });
 
   if (user.length !== 0) {
-    throw new AppError(400, "E-mail already registered");
+    throw new AppError(409, "E-mail already registered");
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
