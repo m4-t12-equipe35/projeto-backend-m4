@@ -4,6 +4,7 @@ export interface IUserRequest {
   stack: string;
   password: string;
   isAdm: boolean;
+  isActive: boolean;
 }
 
 export interface IUser {
@@ -13,6 +14,7 @@ export interface IUser {
   stack: string;
   password?: string | undefined;
   isAdm: boolean;
+  isActive: boolean;
   score: number;
 }
 
