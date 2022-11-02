@@ -1,8 +1,8 @@
-export interface ITechsRequest {
+export interface ITechRequest {
   name: string;
   stack: string;
 }
 
-export interface ITechs extends ITechsRequest {
+export interface ITech extends ITechRequest {
   id: string;
 }

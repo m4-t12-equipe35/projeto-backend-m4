@@ -1,6 +1,6 @@
 import { Exclude } from "class-transformer";
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
-import { User_Questions } from "./user_question.entity";
+// import { User_Questions } from "./user_question.entity";
 
 @Entity("users")
 export class User {
@@ -29,6 +29,6 @@ export class User {
   @Column("integer", { default: 0 })
   score: number;
 
-  @OneToMany(() => User_Questions, (userQuestions) => userQuestions.user)
-  user_questions: User_Questions[];
+  // @OneToMany(() => User_Questions, (userQuestions) => userQuestions.user)
+  // user_questions: User_Questions[];
 }
