@@ -14,7 +14,7 @@ export class User_Questions {
   isRight: boolean;
 
   @ManyToOne(() => Questions)
-  questions: Questions
+  questions: Questions;
 
   @ManyToOne(() => User, { eager: true })
   user: User;
