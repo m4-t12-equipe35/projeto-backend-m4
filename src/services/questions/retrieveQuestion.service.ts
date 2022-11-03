@@ -2,7 +2,7 @@ import AppDataSource from "../../data-source";
 import { Questions } from "../../entities/question.entity";
 import { AppError } from "../../errors/appError";
 
-const listQuestionsByIdService = async (idQuestion: string) => {
+const retrieveQuestionService = async (idQuestion: string) => {
   const questionRepository = AppDataSource.getRepository(Questions);
 
   const questions = await questionRepository.findOne({
@@ -21,4 +21,4 @@ const listQuestionsByIdService = async (idQuestion: string) => {
   return questions;
 };
 
-export default listQuestionsByIdService;
+export default retrieveQuestionService;

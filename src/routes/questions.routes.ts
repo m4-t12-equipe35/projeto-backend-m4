@@ -1,7 +1,7 @@
 import { Router } from "express";
 import createQuestionController from "../controllers/questions/createQuestion.controller";
 import listQuestionsController from "../controllers/questions/listQuestions.controller";
-import listQuestionsByIdController from "../controllers/questions/listQuestionsById.controller";
+import retrieveQuestionController from "../controllers/questions/retrieveQuestion.controller";
 import ensureAuthTokenMiddleware from "../middlewares/ensureAuthToken.middleware";
 import ensureIsAdmMiddleware from "../middlewares/ensureIsAdm.middleware";
 
@@ -23,7 +23,7 @@ questionsRoutes.get(
   "/:id",
   ensureAuthTokenMiddleware,
   ensureIsAdmMiddleware,
-  listQuestionsByIdController
+  retrieveQuestionController
 );
 
 export default questionsRoutes;
