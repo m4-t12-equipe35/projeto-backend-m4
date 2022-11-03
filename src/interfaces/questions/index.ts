@@ -7,3 +7,8 @@ export interface IQuestionRequest {
 export interface IQuestion extends IQuestionRequest {
   id: string;
 }
+
+export interface IQuestionUpdate {
+  question?: string;
+  level?: string;
+}

@@ -15,6 +15,6 @@ export class User_Questions {
   // @ManyToOne(() => Questions)
   // questions: Questions
 
-  @ManyToOne(() => User, { eager: true })
-  user: User;
+  //   @ManyToOne(() => User, { eager: true })
+  //   user: User;
 }
