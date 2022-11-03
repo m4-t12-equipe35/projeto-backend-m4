@@ -3,8 +3,8 @@ import { IQuestionRequest } from "../../interfaces/questions";
 import createQuestionService from "../../services/questions/createQuestion.service";
 
 const createQuestionController = async (req: Request, res: Response) => {
-  const question: IQuestionRequest = req.body;
-  const newQuestion = await createQuestionService(question);
+  const questionRequest: IQuestionRequest = req.body;
+  const newQuestion = await createQuestionService(questionRequest);
   return res.status(201).json(newQuestion);
 }
 
