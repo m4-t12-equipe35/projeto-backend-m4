@@ -14,7 +14,7 @@ const deleteUserService = async (id: string): Promise<void> => {
   }
 
   if (!user.isActive) {
-    throw new AppError(400, "User not found");
+    throw new AppError(400, "User is already deleted");
   }
 
   await userRepository.update(id, {
