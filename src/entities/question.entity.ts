@@ -1,5 +1,7 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Answers } from "./answer.entity";
+import { Tech } from "./tech.entity";
+
 
 @Entity("questions")
 export class Questions {
@@ -12,8 +14,8 @@ export class Questions {
   @Column({ length: 20 })
   level: string;
 
-  // @ManyToOne(() => Techs)
-  //tech: Techs
+  @ManyToOne(() => Tech)
+  tech: Tech;
 
   @OneToMany(() => Answers, answers => answers.question)
   answers: Answers[]
