@@ -185,4 +185,169 @@ describe("users route tests", () => {
     expect(response.status).toBe(404);
     expect(response.body).toHaveProperty("message");
   });
+
+  test("PATCH /users/:id -> Should not be able to update user without authentication", async () => {
+    const adminLoginResponse = await request(app)
+      .post("/login")
+      .send(userAdminData);
+    const userToBeUpdated = await request(app)
+      .get("/users")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+    const response = await request(app).patch(
+      `/users/${userToBeUpdated.body[0].id}`
+    );
+
+    expect(response.body).toHaveProperty("message");
+    expect(response.status).toBe(401);
+  });
+
+  test("PATCH /users/:id -> Should not be able to update user with invalid id", async () => {
+    const newValues = {
+      name: "Matheus Mendes",
+      email: "matheusmendes@mail.com",
+    };
+
+    const admingLoginResponse = await request(app)
+      .post("/login")
+      .send(userAdminData);
+
+    const token = `Bearer ${admingLoginResponse.body.token}`;
+
+    const userToBeUpdatedRequest = await request(app)
+      .get("/users")
+      .set("Authorization", token);
+
+    const userToBeUpdatedId = userToBeUpdatedRequest.body[0].id;
+
+    const response = await request(app)
+      .patch(`/users/13970660-5dbe-423a-9a9d-5c23b37943cf`)
+      .set("Authorization", token)
+      .send(newValues);
+
+    expect(response.body).toHaveProperty("message");
+    expect(response.status).toBe(404);
+  });
+
+  test("PATCH /users/:id -> Should not be able to update isAdm field value", async () => {
+    const newValues = { isAdm: false };
+
+    const adminLoginResponse = await request(app)
+      .post("/login")
+      .send(userAdminData);
+    const token = `Bearer ${adminLoginResponse.body.token}`;
+
+    const userToBeUpdatedRequest = await request(app)
+      .get("/users")
+      .set("Authorization", token);
+    const userTobeUpdatedId = userToBeUpdatedRequest.body[0].id;
+
+    const response = await request(app)
+      .patch(`/users/${userTobeUpdatedId}`)
+      .set("Authorization", token)
+      .send(newValues);
+
+    expect(response.body).toHaveProperty("message");
+    expect(response.status).toBe(401);
+  });
+
+  test("PATCH /users/:id -> Should not be able to update isActive field value", async () => {
+    const newValues = { isActive: false };
+
+    const admingLoginResponse = await request(app)
+      .post("/login")
+      .send(userAdminData);
+    const token = `Bearer ${admingLoginResponse.body.token}`;
+
+    const userToBeUpdatedRequest = await request(app)
+      .get("/users")
+      .set("Authorization", token);
+    const userTobeUpdateId = userToBeUpdatedRequest.body[0].id;
+
+    const response = await request(app)
+      .patch(`/users/${userTobeUpdateId}`)
+      .set("Authorization", token)
+      .send(newValues);
+
+    expect(response.body).toHaveProperty("message");
+    expect(response.status).toBe(401);
+  });
+
+  test("PATCH /users/:id -> Should not be able to update id field value", async () => {
+    const newValues = { id: false };
+
+    const admingLoginResponse = await request(app)
+      .post("/login")
+      .send(userAdminData);
+    const token = `Bearer ${admingLoginResponse.body.token}`;
+
+    const userToBeUpdatedRequest = await request(app)
+      .get("/users")
+      .set("Authorization", token);
+    const userToBeUpdatedId = userToBeUpdatedRequest.body[0].id;
+
+    const response = await request(app)
+      .patch(`/users/${userToBeUpdatedId}`)
+      .set("Authorization", token)
+      .send(newValues);
+
+    expect(response.body).toHaveProperty("message");
+    expect(response.status).toBe(401);
+  });
+
+  test("PATCH /users/:id -> Should not be able to update another user without adm permission", async () => {
+    const newValues = { isActive: false };
+
+    const userLoginResponse = await request(app)
+      .post("/login")
+      .send(userNotAdminData);
+    const admingLoginResponse = await request(app)
+      .post("/login")
+      .send(userAdminData);
+
+    const notAdminToken = `Bearer ${userLoginResponse.body.token}`;
+    const adminToken = `Bearer ${admingLoginResponse.body.token}`;
+
+    const userToBeUpdatedRequest = await request(app)
+      .get("/users")
+      .set("Authorization", adminToken);
+    const userToBeUpdatedId = userToBeUpdatedRequest.body[1].id;
+
+    const response = await request(app)
+      .patch(`/users/${userToBeUpdatedId}`)
+      .set("Authorization", notAdminToken)
+      .send(newValues);
+
+    expect(response.body).toHaveProperty("message");
+    expect(response.status).toBe(401);
+  });
+
+  test("PATCH /users/:id -> Should be able to update user", async () => {
+    const newValues = {
+      name: "Matheus Mendes",
+      email: "matheusmendes@mail.com",
+    };
+
+    const admingLoginResponse = await request(app)
+      .post("/login")
+      .send(userAdminData);
+    const token = `Bearer ${admingLoginResponse.body.token}`;
+
+    const userToBeUpdatedRequest = await request(app)
+      .get("/users")
+      .set("Authorization", token);
+    const userToBeUpdatedId = userToBeUpdatedRequest.body[0].id;
+
+    const response = await request(app)
+      .patch(`/users/${userToBeUpdatedId}`)
+      .set("Authorization", token)
+      .send(newValues);
+
+    const userUpdated = await request(app)
+      .get("/users")
+      .set("Authorization", token);
+
+    expect(response.status).toBe(200);
+    expect(userUpdated.body[0].name).toEqual("Matheus Mendes");
+    expect(userUpdated.body[0]).not.toHaveProperty("password");
+  });
 });

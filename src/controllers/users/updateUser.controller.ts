@@ -5,9 +5,9 @@ import { User } from "../../entities/user.entity";
 import updateUserService from "../../services/users/updateUser.service";
 
 const updateUserController = async (req: Request, res: Response) => {
-  const user: IUserUpdate = req.body;
+  const data: IUserUpdate = req.body;
   const id: string = req.params.id;
-  const updatedUser = await updateUserService(user, id);
+  const updatedUser = await updateUserService(data, id);
   if (updatedUser instanceof User) {
     return res.json(instanceToPlain(updatedUser));
   }
