@@ -27,4 +27,7 @@ export interface IUserUpdate {
   email?: string;
   stack?: string;
   password?: string;
+  isAdm?: boolean;
+  isActive?: boolean;
+  id?: string;
 }

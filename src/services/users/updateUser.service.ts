@@ -5,10 +5,24 @@ import { IUserUpdate } from "../../interfaces/users";
 import { AppError } from "../../errors/appError";
 
 const updateUserService = async (
-  { name, email, stack, password }: IUserUpdate,
+  data: IUserUpdate,
   id: string
 ): Promise<User | Array<string | number>> => {
   const userRepository = AppDataSource.getRepository(User);
+
+  // Verificando se os campos "isAdm", "isActive" ou "id" foram passados na requisição:
+
+  if (data.isAdm !== undefined) {
+    throw new AppError(401, "isAdm property can't be upgraded");
+  }
+
+  if (data.isActive !== undefined) {
+    throw new AppError(401, "isActive property can't be upgraded");
+  }
+
+  if (data.id !== undefined) {
+    throw new AppError(401, "id property can't be upgraded");
+  }
 
   const findUser = await userRepository.findOneBy({
     id: id,
@@ -19,10 +33,10 @@ const updateUserService = async (
   }
 
   await userRepository.update(id, {
-    name: name ? name : findUser.name,
-    email: email ? email : findUser.email,
-    stack: stack ? stack : findUser.stack,
-    password: password ? await hash(password, 10) : findUser.password,
+    name: data.name ? data.name : findUser.name,
+    email: data.email ? data.email : findUser.email,
+    stack: data.stack ? data.stack : findUser.stack,
+    password: data.password ? await hash(data.password, 10) : findUser.password,
   });
 
   const user = await userRepository.findOneBy({
