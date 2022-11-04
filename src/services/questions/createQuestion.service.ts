@@ -4,7 +4,7 @@ import { Questions } from "../../entities/question.entity";
 import { Tech } from "../../entities/tech.entity";
 import { AppError } from "../../errors/appError";
 import { IAnswersRequest } from "../../interfaces/answers";
-import { IQuestionRequest } from "../../interfaces/questions";
+import { IQuestionRequest, IQuestion } from "../../interfaces/questions";
 
 function verifyAnswers(answers: IAnswersRequest[]) {
   if (!answers || answers.length !== 4) {
@@ -29,7 +29,7 @@ const createQuestionService = async ({
   level,
   techId,
   answers,
-}: IQuestionRequest): Promise<Questions> => {
+}: IQuestionRequest): Promise<IQuestion> => {
   const questionRepository = AppDataSource.getRepository(Questions);
   const techRepository = AppDataSource.getRepository(Tech);
   const answersRepository = AppDataSource.getRepository(Answers);
@@ -50,14 +50,16 @@ const createQuestionService = async ({
 
   answers
     .map((answer) => {
-      return { ...answer, question_id: newQuestion };
+      return { ...answer, question: newQuestion };
     })
     .forEach(async (answer) => {
       answersRepository.create(answer);
       await answersRepository.save(answer);
     });
 
-  return newQuestion;
+  const completeQuestion = { ...newQuestion, answers }; // Adicionando o array de answers na resposta da requisição.
+
+  return completeQuestion;
 };
 
 export default createQuestionService;

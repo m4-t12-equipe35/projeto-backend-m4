@@ -9,7 +9,6 @@ export interface IQuestionRequest {
 
 export interface IQuestion {
   id: string;
-  techId: string;
   question: string;
   level: string;
 }
