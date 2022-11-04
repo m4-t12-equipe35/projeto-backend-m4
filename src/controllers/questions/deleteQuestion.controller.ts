@@ -1,18 +1,12 @@
 import { Request, Response } from "express";
-import { AppError, handleError } from "../../errors/appError";
 import deleteQuestionService from "../../services/questions/deleteQuestion.service";
+
 const deleteQuestionController = async (req: Request, res: Response) => {
-  try {
-    const questionId = req.params.id;
+  const questionId = req.params.id;
 
-    deleteQuestionService(questionId);
+  await deleteQuestionService(questionId);
 
-    return res.status(204).send();
-  } catch (err) {
-    if (err instanceof AppError) {
-      handleError(err, res);
-    }
-  }
+  return res.status(204).send();
 };
 
 export default deleteQuestionController;
