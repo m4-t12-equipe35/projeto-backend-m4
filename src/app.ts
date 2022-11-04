@@ -5,9 +5,9 @@ import express from "express";
 import usersRoutes from "./routes/users.routes";
 import sessionsRoutes from "./routes/sessions.routes";
 import techsRoutes from "./routes/techs.routes";
+import questionsRoutes from "./routes/questions.routes";
 
 import handleErrorMiddleware from "./middlewares/handleError.middleware";
-import questionsRoutes from "./routes/questions.routes";
 
 const app = express();
 app.use(express.json());

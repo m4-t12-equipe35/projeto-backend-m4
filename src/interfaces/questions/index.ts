@@ -13,3 +13,8 @@ export interface IQuestion {
   question: string;
   level: string;
 }
+
+export interface IQuestionUpdate {
+  question?: string;
+  level?: string;
+}

@@ -11,7 +11,9 @@ function verifyAnswers(answers: IAnswersRequest[]) {
     throw new AppError(400, "Each question need 4 possible answers");
   }
 
-  const checkCorrectAnswer = answers.filter(answer => answer.isCorrect === true);
+  const checkCorrectAnswer = answers.filter(
+    (answer) => answer.isCorrect === true
+  );
   if (checkCorrectAnswer.length === 0) {
     throw new AppError(400, "Your question doesn't have a correct answer");
   }
@@ -22,15 +24,20 @@ function verifyAnswers(answers: IAnswersRequest[]) {
   return answers;
 }
 
-const createQuestionService = async ({ question, level, techId, answers }: IQuestionRequest): Promise<Questions> => {
+const createQuestionService = async ({
+  question,
+  level,
+  techId,
+  answers,
+}: IQuestionRequest): Promise<Questions> => {
   const questionRepository = AppDataSource.getRepository(Questions);
   const techRepository = AppDataSource.getRepository(Tech);
   const answersRepository = AppDataSource.getRepository(Answers);
 
   const checkTech = await techRepository.findOneBy({ id: techId });
   if (!checkTech) {
-    throw new AppError(404, "Tech not exist");
-  };
+    throw new AppError(404, "Tech not found");
+  }
 
   const newQuestion = questionRepository.create({
     question,
@@ -41,14 +48,16 @@ const createQuestionService = async ({ question, level, techId, answers }: IQues
 
   verifyAnswers(answers);
 
-  answers.map((answer) => {
-    return { ...answer, question_id: newQuestion.id };
-  }).forEach(async (answer) => {
-    answersRepository.create(answer);
-    await answersRepository.save(answer);
-  })
+  answers
+    .map((answer) => {
+      return { ...answer, question_id: newQuestion.id };
+    })
+    .forEach(async (answer) => {
+      answersRepository.create(answer);
+      await answersRepository.save(answer);
+    });
 
   return newQuestion;
-}
+};
 
-export default createQuestionService
+export default createQuestionService;

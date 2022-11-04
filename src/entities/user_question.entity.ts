@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import { Questions } from "./question.entity";
 import { User } from "./user.entity";
 
 @Entity("user_questions")
@@ -12,8 +13,8 @@ export class User_Questions {
   @Column()
   isRight: boolean;
 
-  // @ManyToOne(() => Questions)
-  // questions: Questions
+  @ManyToOne(() => Questions)
+  questions: Questions;
 
   @ManyToOne(() => User, { eager: true })
   user: User;
