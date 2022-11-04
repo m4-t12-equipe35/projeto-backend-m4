@@ -23,7 +23,10 @@ export class Questions {
   @ManyToOne(() => Tech)
   tech: Tech;
 
-  @OneToMany(() => Answers, (answers) => answers.question)
+  @OneToMany(() => Answers, (answers) => answers.question, {
+    cascade: true,
+    eager: true,
+  })
   answers: Answers[];
 
   @OneToMany(() => User_Questions, (userQuestions) => userQuestions.questions)

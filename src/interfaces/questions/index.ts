@@ -1,11 +1,16 @@
+import { IAnswersRequest } from "../answers";
+
 export interface IQuestionRequest {
   techId: string;
   question: string;
   level: string;
+  answers: IAnswersRequest[];
 }
 
-export interface IQuestion extends IQuestionRequest {
+export interface IQuestion {
   id: string;
+  question: string;
+  level: string;
 }
 
 export interface IQuestionUpdate {
