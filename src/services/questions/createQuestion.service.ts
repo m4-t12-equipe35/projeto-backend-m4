@@ -8,7 +8,7 @@ import { IQuestionRequest } from "../../interfaces/questions";
 
 function verifyAnswers(answers: IAnswersRequest[]) {
   if (!answers || answers.length !== 4) {
-    throw new AppError(400, "Each question need 4 possible answers");
+    throw new AppError(400, "Each question needs 4 possible answers");
   }
 
   const checkCorrectAnswer = answers.filter(
@@ -18,7 +18,7 @@ function verifyAnswers(answers: IAnswersRequest[]) {
     throw new AppError(400, "Your question doesn't have a correct answer");
   }
   if (checkCorrectAnswer.length !== 1) {
-    throw new AppError(400, "Each question need only 1 correct answer");
+    throw new AppError(400, "Each question needs only 1 correct answer");
   }
 
   return answers;
@@ -50,7 +50,7 @@ const createQuestionService = async ({
 
   answers
     .map((answer) => {
-      return { ...answer, question_id: newQuestion.id };
+      return { ...answer, question_id: newQuestion };
     })
     .forEach(async (answer) => {
       answersRepository.create(answer);
