@@ -2,29 +2,13 @@ import request from "supertest";
 import app from "../../app";
 import AppDataSource from "../../data-source";
 import { DataSource } from "typeorm";
-import { IUserRequest } from "../../interfaces/users";
-import { ITechRequest } from "../../interfaces/techs";
-
-const userAdminData: IUserRequest = {
-  name: "Matheus",
-  email: "matheus@mail.com",
-  stack: "Backend",
-  password: "1234",
-  isAdm: true,
-};
-
-const userNotAdminData: IUserRequest = {
-  name: "Mendes",
-  email: "mendes@mail.com",
-  stack: "Fullstack",
-  password: "1234",
-  isAdm: false,
-};
-
-const mockedTech: ITechRequest = {
-  name: "TypeScript",
-  stack: "Fullstack",
-};
+import {
+  mockedAdminData,
+  mockedNotAdminData,
+  mockedAdminLogin,
+  mockedNotAdminLogin,
+  mockedTech,
+} from "../mocks";
 
 describe("techs routes test", () => {
   let connection: DataSource;
@@ -38,8 +22,8 @@ describe("techs routes test", () => {
         console.error("Error during Data Source initialization", err);
       });
 
-    await request(app).post("/users").send(userAdminData);
-    await request(app).post("/users").send(userNotAdminData);
+    await request(app).post("/users").send(mockedAdminData);
+    await request(app).post("/users").send(mockedNotAdminData);
   });
 
   afterAll(async () => {
@@ -49,7 +33,7 @@ describe("techs routes test", () => {
   test("POST /techs -> Must be able to create tech", async () => {
     const adminLoginResponse = await request(app)
       .post("/login")
-      .send(userAdminData);
+      .send(mockedAdminLogin);
 
     const response = await request(app)
       .post("/techs")
@@ -65,7 +49,7 @@ describe("techs routes test", () => {
   test("POST /techs -> Should not be able to create tech that already exists", async () => {
     const adminLoginResponse = await request(app)
       .post("/login")
-      .send(userAdminData);
+      .send(mockedAdminLogin);
     const response = await request(app)
       .post("/techs")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
@@ -85,7 +69,7 @@ describe("techs routes test", () => {
   test("POST /techs -> Should not be able to create tech not being admin", async () => {
     const userLoginResponse = await request(app)
       .post("/login")
-      .send(userNotAdminData);
+      .send(mockedNotAdminLogin);
 
     const response = await request(app)
       .post("/techs")
@@ -105,7 +89,7 @@ describe("techs routes test", () => {
   test("DELETE /techs/:id -> Should not be able to delete tech without authentication", async () => {
     const adminLoginResponse = await request(app)
       .post("/login")
-      .send(userAdminData);
+      .send(mockedAdminLogin);
     const techToBeDeleted = await request(app)
       .get("/techs")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
@@ -121,10 +105,10 @@ describe("techs routes test", () => {
   test("DELETE /techs/:id -> Should not be able to delete tech not being admin", async () => {
     const adminLoginResponse = await request(app)
       .post("/login")
-      .send(userAdminData);
+      .send(mockedAdminLogin);
     const notAdminLoginResponse = await request(app)
       .post("/login")
-      .send(userNotAdminData);
+      .send(mockedNotAdminLogin);
     const techToBeDeleted = await request(app) // O usuário admin faz o get.
       .get("/techs")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
@@ -140,7 +124,7 @@ describe("techs routes test", () => {
   test("DELETE /techs/:id -> Should not be able to delete tech with invalid id", async () => {
     const adminLoginResponse = await request(app)
       .post("/login")
-      .send(userAdminData);
+      .send(mockedAdminLogin);
 
     const response = await request(app)
       .delete(`/techs/13970660-5dbe-423a-9a9d-5c23b37943cf`)
@@ -153,12 +137,12 @@ describe("techs routes test", () => {
   test("DELETE /techs/:id -> Must be able to delete tech", async () => {
     const adminLoginResponse = await request(app)
       .post("/login")
-      .send(userAdminData);
+      .send(mockedAdminLogin);
 
-    const TechToBeDeleted = await request(app).get("/techs");
+    const techToBeDeleted = await request(app).get("/techs");
 
     const response = await request(app)
-      .delete(`/techs/${TechToBeDeleted.body[0].id}`)
+      .delete(`/techs/${techToBeDeleted.body[0].id}`)
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(response.status).toBe(204);
