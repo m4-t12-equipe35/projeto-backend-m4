@@ -39,14 +39,14 @@ const createQuestionService = async ({
     throw new AppError(404, "Tech not found");
   }
 
+  verifyAnswers(answers);
+
   const newQuestion = questionRepository.create({
     question,
     level,
     tech: checkTech,
   });
   await questionRepository.save(newQuestion);
-
-  verifyAnswers(answers);
 
   answers
     .map((answer) => {

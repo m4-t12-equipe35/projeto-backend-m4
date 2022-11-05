@@ -2,20 +2,7 @@ import request from "supertest";
 import app from "../../app";
 import AppDataSource from "../../data-source";
 import { DataSource } from "typeorm";
-import { IUserRequest, IUserLogin } from "../../interfaces/users";
-
-const userAdminData: IUserRequest = {
-  name: "Matheus",
-  email: "matheus@mail.com",
-  stack: "Backend",
-  password: "1234",
-  isAdm: true,
-};
-
-const loginData: IUserLogin = {
-  email: "matheus@mail.com",
-  password: "1234",
-};
+import { mockedAdminData, mockedAdminLogin } from "../mocks";
 
 describe("sessions route tests", () => {
   let connection: DataSource;
@@ -35,8 +22,10 @@ describe("sessions route tests", () => {
   });
 
   test("POST /login -  should be able to login with the user", async () => {
-    await request(app).post("/users").send(userAdminData);
-    const loginResponse = await request(app).post("/login").send(loginData);
+    await request(app).post("/users").send(mockedAdminData);
+    const loginResponse = await request(app)
+      .post("/login")
+      .send(mockedAdminLogin);
 
     expect(loginResponse.status).toBe(200);
     expect(loginResponse.body).toHaveProperty("token");

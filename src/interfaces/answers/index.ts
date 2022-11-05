@@ -7,3 +7,8 @@ export interface IAnswersRequest {
 export interface IAnswers extends IAnswersRequest {
   id: string;
 }
+
+export interface IAnswersTest {
+  answer: string;
+  isCorrect: boolean;
+}
