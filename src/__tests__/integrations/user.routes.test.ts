@@ -2,23 +2,12 @@ import request from "supertest";
 import app from "../../app";
 import AppDataSource from "../../data-source";
 import { DataSource } from "typeorm";
-import { IUserRequest } from "../../interfaces/users";
-
-const userAdminData: IUserRequest = {
-  name: "Matheus",
-  email: "matheus@mail.com",
-  stack: "Backend",
-  password: "1234",
-  isAdm: true,
-};
-
-const userNotAdminData: IUserRequest = {
-  name: "Mendes",
-  email: "mendes@mail.com",
-  stack: "Fullstack",
-  password: "1234",
-  isAdm: false,
-};
+import {
+  mockedAdminData,
+  mockedNotAdminData,
+  mockedAdminLogin,
+  mockedNotAdminLogin,
+} from "../mocks";
 
 describe("users route tests", () => {
   let connection: DataSource;
@@ -38,7 +27,9 @@ describe("users route tests", () => {
   });
 
   test("POST /users -> Must be able to create a user", async () => {
-    const adminResponse = await request(app).post("/users").send(userAdminData);
+    const adminResponse = await request(app)
+      .post("/users")
+      .send(mockedAdminData);
 
     expect(adminResponse.status).toBe(201);
     expect(adminResponse.body).toHaveProperty("id");
@@ -55,7 +46,9 @@ describe("users route tests", () => {
   });
 
   test("POST /users -> Should not be able to create a user that already exists", async () => {
-    const adminResponse = await request(app).post("/users").send(userAdminData);
+    const adminResponse = await request(app)
+      .post("/users")
+      .send(mockedAdminData);
 
     expect(adminResponse.status).toBe(409);
     expect(adminResponse.body).toMatchObject({
@@ -65,11 +58,13 @@ describe("users route tests", () => {
   });
 
   test("GET /users -> Must be able to list users", async () => {
-    const loginResponse = await request(app).post("/login").send(userAdminData);
+    const loginResponse = await request(app)
+      .post("/login")
+      .send(mockedAdminLogin);
 
     const notAdminResponse = await request(app)
       .post("/users")
-      .send(userNotAdminData);
+      .send(mockedNotAdminData);
 
     const response = await request(app)
       .get("/users")
@@ -89,7 +84,7 @@ describe("users route tests", () => {
   test("GET /users -> Should not be able to list users not being admin", async () => {
     const loginResponse = await request(app)
       .post("/login")
-      .send(userNotAdminData);
+      .send(mockedNotAdminLogin);
     const notAdminResponse = await request(app)
       .get("/users")
       .set("Authorization", `Bearer ${loginResponse.body.token}`);
@@ -101,7 +96,7 @@ describe("users route tests", () => {
   test("DELETE /users/:id -> Should not be able to delete user without authentication", async () => {
     const adminLoginResponse = await request(app)
       .post("/login")
-      .send(userAdminData);
+      .send(mockedAdminData);
     const userToBeDeleted = await request(app)
       .get("/users")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
@@ -117,10 +112,10 @@ describe("users route tests", () => {
   test("DELETE /users/:id -> Should not be able to delete user not being admin", async () => {
     const adminLoginResponse = await request(app)
       .post("/login")
-      .send(userAdminData);
+      .send(mockedAdminLogin);
     const notAdminLoginResponse = await request(app)
       .post("/login")
-      .send(userNotAdminData);
+      .send(mockedNotAdminLogin);
     const userToBeDeleted = await request(app) // O usuário admin faz o get.
       .get("/users")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
@@ -134,11 +129,11 @@ describe("users route tests", () => {
   });
 
   test("DELETE /users/:id -> Must be able to soft delete user", async () => {
-    await request(app).post("/users").send(userAdminData);
+    await request(app).post("/users").send(mockedAdminLogin);
 
     const adminLoginResponse = await request(app)
       .post("/login")
-      .send(userAdminData);
+      .send(mockedAdminLogin);
     const userToBeDeleted = await request(app)
       .get("/users")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
@@ -155,11 +150,11 @@ describe("users route tests", () => {
   });
 
   test("DELETE /users/:id -> Shouldn't be able to delete user with isActive === false", async () => {
-    await request(app).post("/users").send(userAdminData);
+    await request(app).post("/users").send(mockedAdminData);
 
     const adminLoginResponse = await request(app)
       .post("/login")
-      .send(userAdminData);
+      .send(mockedAdminLogin);
     const userToBeDeleted = await request(app)
       .get("/users")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
@@ -173,11 +168,11 @@ describe("users route tests", () => {
   });
 
   test("DELETE -> Should not be able to delete user with invalid id", async () => {
-    await request(app).post("/users").send(userAdminData);
+    await request(app).post("/users").send(mockedAdminData);
 
     const adminLoginResponse = await request(app)
       .post("/login")
-      .send(userAdminData);
+      .send(mockedAdminLogin);
 
     const response = await request(app)
       .delete(`/users/13970660-5dbe-423a-9a9d-5c23b37943cf`)
@@ -189,7 +184,7 @@ describe("users route tests", () => {
   test("PATCH /users/:id -> Should not be able to update user without authentication", async () => {
     const adminLoginResponse = await request(app)
       .post("/login")
-      .send(userAdminData);
+      .send(mockedAdminLogin);
     const userToBeUpdated = await request(app)
       .get("/users")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
@@ -209,7 +204,7 @@ describe("users route tests", () => {
 
     const admingLoginResponse = await request(app)
       .post("/login")
-      .send(userAdminData);
+      .send(mockedAdminLogin);
 
     const token = `Bearer ${admingLoginResponse.body.token}`;
 
@@ -233,7 +228,7 @@ describe("users route tests", () => {
 
     const adminLoginResponse = await request(app)
       .post("/login")
-      .send(userAdminData);
+      .send(mockedAdminLogin);
     const token = `Bearer ${adminLoginResponse.body.token}`;
 
     const userToBeUpdatedRequest = await request(app)
@@ -255,7 +250,7 @@ describe("users route tests", () => {
 
     const admingLoginResponse = await request(app)
       .post("/login")
-      .send(userAdminData);
+      .send(mockedAdminLogin);
     const token = `Bearer ${admingLoginResponse.body.token}`;
 
     const userToBeUpdatedRequest = await request(app)
@@ -277,7 +272,7 @@ describe("users route tests", () => {
 
     const admingLoginResponse = await request(app)
       .post("/login")
-      .send(userAdminData);
+      .send(mockedAdminLogin);
     const token = `Bearer ${admingLoginResponse.body.token}`;
 
     const userToBeUpdatedRequest = await request(app)
@@ -299,10 +294,10 @@ describe("users route tests", () => {
 
     const userLoginResponse = await request(app)
       .post("/login")
-      .send(userNotAdminData);
+      .send(mockedNotAdminLogin);
     const admingLoginResponse = await request(app)
       .post("/login")
-      .send(userAdminData);
+      .send(mockedAdminLogin);
 
     const notAdminToken = `Bearer ${userLoginResponse.body.token}`;
     const adminToken = `Bearer ${admingLoginResponse.body.token}`;
@@ -329,7 +324,7 @@ describe("users route tests", () => {
 
     const admingLoginResponse = await request(app)
       .post("/login")
-      .send(userAdminData);
+      .send(mockedAdminLogin);
     const token = `Bearer ${admingLoginResponse.body.token}`;
 
     const userToBeUpdatedRequest = await request(app)
